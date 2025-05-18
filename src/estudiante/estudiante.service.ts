@@ -1,8 +1,4 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import { Repository } from "typeorm";
 import { EstudianteEntity } from "../estudiante/estudiante.entity";
@@ -17,11 +13,11 @@ export class EstudianteService {
   ) {}
 
   async crearEstudiante(estudianteNew: EstudianteEntity): Promise<EstudianteEntity> {
-    if (estudianteNew.promedio<3.2){
-          throw new NotAcceptableException(`Promedio debe ser mayor a 3.2`);
+    if (estudianteNew.promedio < 3.2) {
+      throw new NotAcceptableException(`Promedio debe ser mayor a 3.2`);
     }
-    if (estudianteNew.semestre>=4){
-          throw new NotAcceptableException(` semestre ≥ 4`);
+    if (estudianteNew.semestre >= 4) {
+      throw new NotAcceptableException(`semestre debe ser menor a 4`);
     }
 
     return await this.estudianteRepository.save(estudianteNew);
@@ -29,14 +25,12 @@ export class EstudianteService {
 
 
 async eliminarEstudiante(id: number): Promise<void> {
-  const estudiante = await this.estudianteRepository.findOne({ where: { id } });
-
+  const estudiante = await this.estudianteRepository.findOne({ where: { id }, relations: ['proyectos'] });
   if (!estudiante) {
     throw new NotFoundException(`Estudiante con id ${id} no encontrado`);
   }
-  if(estudiante.proyectos.length > 0){
+  if ((estudiante.proyectos?.length || 0) > 0) {
     throw new NotAcceptableException(`Estudiante tiene proyectos activos`);
-
   }
   await this.estudianteRepository.remove(estudiante);
 }

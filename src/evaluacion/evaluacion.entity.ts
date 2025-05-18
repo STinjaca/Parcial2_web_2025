@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 
-import { ProfesorEntity } from 'src/profesor/profesor.entity';
+import { ProfesorEntity } from '../profesor/profesor.entity';
+import { ProyectoEntity } from '../proyecto/proyecto.entity';
 import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -11,5 +11,8 @@ export class EvaluacionEntity {
 
     @ManyToOne(() => ProfesorEntity, profesor => profesor.evaluaciones)
     profesor: ProfesorEntity;
+
+    @ManyToOne(() => ProyectoEntity, proyecto => proyecto.evaluaciones)
+    proyecto?: ProyectoEntity;
 
     }

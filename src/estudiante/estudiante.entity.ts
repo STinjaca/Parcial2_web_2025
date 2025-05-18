@@ -1,9 +1,6 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
-import { ProyectoEntity } from 'src/proyecto/proyecto.entity';
+import { ProyectoEntity } from '../proyecto/proyecto.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -26,7 +23,7 @@ export class EstudianteEntity {
     @Column()
     promedio: number;
 
-    @OneToMany(() => ProyectoEntity, proyecto => proyecto.estudiante)
+    @OneToMany(() => ProyectoEntity, proyecto => proyecto.lider)
     proyectos: ProyectoEntity[];
 
     }

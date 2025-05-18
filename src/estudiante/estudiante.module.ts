@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EstudianteEntity } from './estudiante.entity';
 import { EstudianteService } from './estudiante.service';
-
+import { EstudianteController } from './estudiante.controller';
 @Module({
     imports: [TypeOrmModule.forFeature([EstudianteEntity])],
-    providers: [EstudianteEntity],
-    exports: [EstudianteService], // solo si otro módulo lo necesita
+    providers: [EstudianteService], // Corregido: Añadir EstudianteService aquí
+    controllers: [EstudianteController],
+    exports: [EstudianteService], // Exportar EstudianteService
 })
 export class EstudianteModule {}

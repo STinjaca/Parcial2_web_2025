@@ -16,18 +16,31 @@ export class ProfesorService {
   ) {}
 
   async crearProfesor(profesorNew: ProfesorEntity): Promise<ProfesorEntity> {
-    if(profesorNew.extencion.toString().length == 5){
-      throw new NotAcceptableException(`Extencio mas de 5 digitos`);
+    if (profesorNew.extencion.toString().length !== 5) {
+      throw new NotAcceptableException(`Extencio debe tener exactamente 5 digitos`);
     }
 
     return await this.ProfesorRepository.save(profesorNew);
   }
-  async asignarEvaluador(profesorNew: ProfesorEntity): Promise<ProfesorEntity> {
-    if(profesorNew.extencion.toString().length == 5){
-      throw new NotAcceptableException(`Extencio mas de 5 digitos`);
+  async asignarEvaluador(id: number): Promise<ProfesorEntity> {
+    const profesor = await this.ProfesorRepository.findOne({
+      where: { id },
+      relations: ['evaluaciones'],
+    });
+
+    if (!profesor) {
+      throw new NotAcceptableException('Profesor no encontrado');
     }
 
-    return await this.ProfesorRepository.save(profesorNew);
+    const evaluacionesActivas = profesor.evaluaciones;
+
+    if (evaluacionesActivas.length >= 3) {
+      throw new NotAcceptableException('El profesor ya tiene 3 o más evaluaciones activas');
+    }
+
+    profesor.esParEvaluado = true;
+
+    return await this.ProfesorRepository.save(profesor);
   }
 
 

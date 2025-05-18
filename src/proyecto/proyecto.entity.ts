@@ -1,8 +1,10 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
-import { EstudianteEntity } from 'src/estudiante/estudiante.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { EstudianteEntity } from '../estudiante/estudiante.entity';
+import { EvaluacionEntity } from '../evaluacion/evaluacion.entity';
+import { ProfesorEntity } from '../profesor/profesor.entity';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class ProyectoEntity {
@@ -30,7 +32,13 @@ export class ProyectoEntity {
     @Column()
     fechaFin: string;
 
-    @ManyToOne(() => EstudianteEntity, estudiante => estudiante.proyectos)
-    estudiante: EstudianteEntity;
+    @ManyToOne(() => EstudianteEntity, lider => lider.proyectos)
+    lider: EstudianteEntity;
+
+    @ManyToOne(() => ProfesorEntity, mentor => mentor.mentorias)
+    mentor: ProfesorEntity;
+
+    @OneToMany(() => EvaluacionEntity, evalucaion => evalucaion.proyecto)
+    evaluaciones: EvaluacionEntity[];
 
     }

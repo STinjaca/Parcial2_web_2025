@@ -1,0 +1,191 @@
+{
+	"info": {
+		"_postman_id": "f00a7c5d-631f-4dd0-9871-7f5e7333a7bc",
+		"name": "Estudiante",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43913973"
+	},
+	"item": [
+		{
+			"name": "crear Estudiante",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Guardar ID del estudiante creado\", () => {\r",
+							"  const jsonData = pm.response.json();\r",
+							"  pm.environment.set(\"estudiante_id\", jsonData.id);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"El promedio es correcto\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.promedio).to.eql(4.3);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"cedula\": 123456789,\r\n  \"nombre\": \"Juan Pérez\",\r\n  \"semestre\": 3,\r\n  \"programa\": \"Ingeniería de Sistemas\",\r\n  \"promedio\": 4.3\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/estudiantes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"estudiantes"
+					]
+				},
+				"description": "Crea un nuevo estudiante con los datos proporcionados."
+			},
+			"response": []
+		},
+		{
+			"name": "Crear un estudiante inválido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Debe fallar con 406\", () => {\r",
+							"  pm.response.to.have.status(406);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Promedio debe ser mayor a 3.2\", () => {\r",
+							"  const jsonData = pm.response.json();\r",
+							"  pm.expect(jsonData.statusCode).to.eql(406);\r",
+							"  pm.expect(jsonData.message).to.eql(\"Promedio debe ser mayor a 3.2\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"cedula\": \"no es un número\",\r\n  \"nombre\": \"\",\r\n  \"semestre\": 11,\r\n  \"programa\": \"\",\r\n  \"promedio\": -1\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/estudiantes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"estudiantes"
+					]
+				},
+				"description": "Intenta crear un estudiante con datos inválidos, lo que debería generar un error de validación."
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar estudiante válido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code es 204\", () => {\r",
+							"  pm.response.to.have.status(204);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Respuesta vacía\", () => {\r",
+							"  pm.expect(pm.response.text()).to.eql(\"\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/estudiantes/{{estudiante_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"estudiantes",
+						"{{estudiante_id}}"
+					]
+				},
+				"description": "Elimina un estudiante existente usando su identificador válido."
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar estudiante que no existe",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Debe retornar 404 si no existe\", () => {\r",
+							"  pm.expect([404]).to.include(pm.response.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/estudiantes/9999",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"estudiantes",
+						"9999"
+					]
+				},
+				"description": "Intenta eliminar un estudiante que no existe, devolviendo un error de no encontrado."
+			},
+			"response": []
+		}
+	]
+}

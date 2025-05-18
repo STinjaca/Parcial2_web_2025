@@ -1,0 +1,38 @@
+{
+	"info": {
+		"_postman_id": "3c42ca4a-9da0-4746-aba7-c0fa19602149",
+		"name": "Profesor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43913973"
+	},
+	"item": [
+		{
+			"name": "Crear profesor",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Nuevo Profesor\",\r\n  \"cedula\": 1010110,\r\n  \"departamento\": \"Ingeniería\",\r\n  \"extencion\": 54321,\r\n  \"esParEvaluado\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/profesores",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"profesores"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

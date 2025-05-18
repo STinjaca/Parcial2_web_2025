@@ -13,7 +13,13 @@ export class ProyectoController {
 
     @Post()
     async crearProyecto(@Body() proyectoDto: ProyectoDto) {
-        const proyecto: ProyectoEntity = plainToInstance(ProyectoEntity, proyectoDto);
+        // Convertir mentorId a profesor en la entidad
+        const { mentorId, ...rest } = proyectoDto;
+        const proyecto: ProyectoEntity = plainToInstance(ProyectoEntity, rest);
+        if (mentorId) {
+            // Asumiendo que ProyectoEntity tiene una propiedad 'profesor'
+            proyecto.mentor = { id: mentorId } as any;
+        }
         return await this.proyectoService.crearProyecto(proyecto);
     }
 

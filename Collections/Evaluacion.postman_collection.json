@@ -1,0 +1,238 @@
+{
+	"info": {
+		"_postman_id": "c78e3d67-271c-4e2d-b48a-c52c1ab3d87e",
+		"name": "Evaluacion",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43913973"
+	},
+	"item": [
+		{
+			"name": "Crear un profesor mentor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Guardar ID del estudiante creado\", () => {\r",
+							"  const jsonData = pm.response.json();\r",
+							"  pm.environment.set(\"mentorId\", jsonData.id);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"cedula\": 123456,\r\n  \"nombre\": \"Profesor Mentor\",\r\n  \"departamento\": \"Departamento X\",\r\n  \"extencion\": 12345,\r\n  \"esParEvaluado\": false\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/profesores",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"profesores"
+					]
+				},
+				"description": "Registra un nuevo profesor con rol de mentor, incluyendo su cédula, nombre, departamento, extensión y si es par evaluado."
+			},
+			"response": []
+		},
+		{
+			"name": "Crear un profesor evaluador",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Guardar ID del estudiante creado\", () => {\r",
+							"  const jsonData = pm.response.json();\r",
+							"  pm.environment.set(\"evaluadorId\", jsonData.id);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"cedula\": 654321,\r\n  \"nombre\": \"Profesor Evaluador\",\r\n  \"departamento\": \"Departamento Y\",\r\n  \"extencion\": 54321,\r\n  \"esParEvaluado\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/profesores",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"profesores"
+					]
+				},
+				"description": "Registra un nuevo profesor con rol de evaluador, incluyendo su cédula, nombre, departamento, extensión y estado de par evaluado."
+			},
+			"response": []
+		},
+		{
+			"name": "Crear un proyecto con ese mentor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Guardar ID del estudiante creado\", () => {\r",
+							"  const jsonData = pm.response.json();\r",
+							"  pm.environment.set(\"proyectoId\", jsonData.id);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"titulo\": \"Proyecto Test\",\r\n  \"area\": \"Area Test\",\r\n  \"presupuesto\": 1000,\r\n  \"notaFinal\": 4,\r\n  \"estado\": 1,\r\n  \"fechaInicio\": \"2023-01-01\",\r\n  \"fechaFin\": \"2023-12-31\",\r\n  \"mentorId\": {{mentorId}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/proyectos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"proyectos"
+					]
+				},
+				"description": "Crea un proyecto académico asignando un mentor específico, con detalles como título, área, presupuesto, nota final, estado y fechas de inicio y fin."
+			},
+			"response": []
+		},
+		{
+			"name": "Intentar crear una evaluación con el mentor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Debe fallar si el profesor es el mentor\", () => {\r",
+							"  const json = pm.response.json();\r",
+							"  pm.expect(pm.response.code).to.eql(406); // o 409 o lo que use tu backend\r",
+							"  pm.expect(json.message).to.include(\"El profesor evaluador no puede ser el mentor\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"profesorId\": {{mentorId}},\r\n  \"proyectoId\": {{proyectoId}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/evaluaciones",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"evaluaciones"
+					]
+				},
+				"description": "Intenta crear una evaluación vinculando un profesor (mentor) con un proyecto, validando que los datos sean correctos."
+			},
+			"response": []
+		},
+		{
+			"name": "Crea una evaluación con el mentor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Evaluación creada exitosamente\", () => {\r",
+							"  const json = pm.response.json();\r",
+							"  pm.expect(pm.response.code).to.eql(201); // o 200 si es el código que retorna\r",
+							"  pm.expect(json.profesor.id).to.eql(parseInt(pm.environment.get(\"evaluadorId\")));\r",
+							"  pm.expect(json.proyecto.id).to.eql(parseInt(pm.environment.get(\"proyectoId\")));\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"profesorId\": {{evaluadorId}},\r\n  \"proyectoId\": {{proyectoId}}\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/evaluaciones",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"evaluaciones"
+					]
+				},
+				"description": "Registra exitosamente una evaluación asociando un profesor (mentor) con un proyecto."
+			},
+			"response": []
+		}
+	]
+}
